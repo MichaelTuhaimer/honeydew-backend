@@ -37,7 +37,7 @@ def initial_setup():
         INSERT INTO honeydews (name, description, priority)
         VALUES (?,?,?)
         """,
-        photos_seed_data,
+        honeydews_seed_data,
     )
     conn.commit()
     print("Seed data created successfully")
