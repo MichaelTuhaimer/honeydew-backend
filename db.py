@@ -73,6 +73,19 @@ def honeydews_update_by_id(id, name, description, priority):
     return dict(row)
 
 
+def honeydews_destroy_by_id(id):
+    conn = connect_to_db()
+    row = conn. execute(
+        """
+        DELETE from honeydews
+        WHERE id = ?
+        """,
+        (id,),
+    )
+    conn.commit()
+    return {"message": "Honeydew destroyed successfully"}
+
+
 def honeydews_find_by_id(id):
     conn = connect_to_db()
     row = conn.execute(
