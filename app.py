@@ -32,4 +32,4 @@ def update(id):
     name = request.form.get("name")
     description = request.form.get("description")
     priority = request.form.get("priority")
-    return db.photos_update_by_id(id, name, description, priority)
+    return db.honeydews_update_by_id(id, name, description, priority)
