@@ -59,6 +59,20 @@ def honeydews_create(name, description, priority):
     return dict(row)
 
 
+def honeydews_update_by_id(id, name, description, priority):
+    conn = connect_to_db()
+    row = conn.execute(
+        """
+        UPDATE honeydews SET name = ?, description = ?, priority = ?
+        WHERE id = ?
+        RETURNING *
+        """,
+        (name, description, priority, id),
+    ).fetchone()
+    conn.commit()
+    return dict(row)
+
+
 def honeydews_find_by_id(id):
     conn = connect_to_db()
     row = conn.execute(
