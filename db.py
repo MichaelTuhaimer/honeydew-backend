@@ -16,11 +16,27 @@ def initial_setup():
     )
     conn.execute(
         """
+        DROP TABLE IF EXISTS users;
+        """
+    )
+    conn.execute(
+        """
         CREATE TABLE honeydews (
           id INTEGER PRIMARY KEY NOT NULL,
           name TEXT,
           description TEXT,
-          priority INTEGER
+          priority INTEGER,
+          user_id INTEGER
+        );
+        """
+    )
+    conn.execute(
+        """
+        CREATE TABLE users (
+          id INTEGER PRIMARY KEY NOT NULL,
+          name TEXT,
+          email TEXT,
+          password_digest TEXT
         );
         """
     )
@@ -28,16 +44,26 @@ def initial_setup():
     print("Table created successfully")
 
     honeydews_seed_data = [
-        ("1st honeydew", "First description", 1),
-        ("2nd honeydew", "Second description", 2),
-        ("3rd honeydew", "Third description", 3),
+        ("1st honeydew", "First description", 1, 1),
+        ("2nd honeydew", "Second description", 2, 1),
+        ("3rd honeydew", "Third description", 3, 1),
+    ]
+    users_seed_data = [
+        ("test", "test@example.com", "password")
     ]
     conn.executemany(
         """
-        INSERT INTO honeydews (name, description, priority)
-        VALUES (?,?,?)
+        INSERT INTO honeydews (name, description, priority, user_id)
+        VALUES (?,?,?,?)
         """,
         honeydews_seed_data,
+    )
+    conn.executemany(
+        """
+        INSERT INTO users (name, email, password_digest)
+        VALUES (?,?,?)
+        """,
+        users_seed_data,
     )
     conn.commit()
     print("Seed data created successfully")
@@ -45,15 +71,15 @@ def initial_setup():
     conn.close()
 
 
-def honeydews_create(name, description, priority):
+def honeydews_create(name, description, priority, user_id):
     conn = connect_to_db()
     row = conn.execute(
         """
-        INSERT INTO honeydews (name, description, priority)
-        VALUES (?, ?, ?)
+        INSERT INTO honeydews (name, description, priority, user_id)
+        VALUES (?, ?, ?, ?)
         RETURNING *
         """,
-        (name, description, priority),
+        (name, description, priority, user_id),
     ).fetchone()
     conn.commit()
     return dict(row)
