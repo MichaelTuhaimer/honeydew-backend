@@ -11,16 +11,16 @@ def initial_setup():
     conn = connect_to_db()
     conn.execute(
         """
-        DROP TABLE IF EXISTS photos;
+        DROP TABLE IF EXISTS honeydews;
         """
     )
     conn.execute(
         """
-        CREATE TABLE photos (
+        CREATE TABLE honeydews (
           id INTEGER PRIMARY KEY NOT NULL,
           name TEXT,
-          width INTEGER,
-          height INTEGER
+          description TEXT,
+          priority INTEGER
         );
         """
     )
@@ -28,13 +28,13 @@ def initial_setup():
     print("Table created successfully")
 
     photos_seed_data = [
-        ("1st photo", 800, 400),
-        ("2nd photo", 1024, 768),
-        ("3rd photo", 200, 150),
+        ("1st honeydew", "First description", 1),
+        ("2nd honeydew", "Second description", 2),
+        ("3rd honeydew", "Third description", 3),
     ]
     conn.executemany(
         """
-        INSERT INTO photos (name, width, height)
+        INSERT INTO honeydews (name, description, priority)
         VALUES (?,?,?)
         """,
         photos_seed_data,
@@ -43,6 +43,16 @@ def initial_setup():
     print("Seed data created successfully")
 
     conn.close()
+
+
+def honeydews_all():
+    conn = connect_to_db()
+    rows = conn.execute(
+        """
+        SELECT * FROM honeydews
+        """
+    ).fetchall()
+    return [dict(row) for row in rows]
 
 
 if __name__ == "__main__":
