@@ -27,7 +27,7 @@ def initial_setup():
     conn.commit()
     print("Table created successfully")
 
-    photos_seed_data = [
+    honeydews_seed_data = [
         ("1st honeydew", "First description", 1),
         ("2nd honeydew", "Second description", 2),
         ("3rd honeydew", "Third description", 3),
@@ -43,6 +43,20 @@ def initial_setup():
     print("Seed data created successfully")
 
     conn.close()
+
+
+def honeydews_create(name, description, priority):
+    conn = connect_to_db()
+    row = conn.execute(
+        """
+        INSERT INTO honeydews (name, description, priority)
+        VALUES (?, ?, ?)
+        RETURNING *
+        """,
+        (name, description, priority),
+    ).fetchone()
+    conn.commit()
+    return dict(row)
 
 
 def honeydews_all():
