@@ -48,9 +48,7 @@ def initial_setup():
         ("2nd honeydew", "Second description", 2, 1),
         ("3rd honeydew", "Third description", 3, 1),
     ]
-    users_seed_data = [
-        ("test", "test@example.com", "password")
-    ]
+    users_seed_data = [("test", "test@example.com", "password")]
     conn.executemany(
         """
         INSERT INTO honeydews (name, description, priority, user_id)
@@ -89,11 +87,11 @@ def honeydews_update_by_id(id, name, description, priority):
     conn = connect_to_db()
     row = conn.execute(
         """
-        UPDATE honeydews SET name = ?, description = ?, priority = ?
+        UPDATE honeydews SET name = ?, description = ?, priority = ?, user_id = ?
         WHERE id = ?
         RETURNING *
         """,
-        (name, description, priority, id),
+        (name, description, priority, id, user_id),
     ).fetchone()
     conn.commit()
     return dict(row)
@@ -101,7 +99,7 @@ def honeydews_update_by_id(id, name, description, priority):
 
 def honeydews_destroy_by_id(id):
     conn = connect_to_db()
-    row = conn. execute(
+    row = conn.execute(
         """
         DELETE from honeydews
         WHERE id = ?
