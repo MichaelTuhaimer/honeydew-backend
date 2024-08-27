@@ -9,6 +9,11 @@ def hello():
     return "Hello, World!"
 
 
+@app.route("/honeydews/<id>.json")
+def show(id):
+    return db.honeydews_find_by_id(id)
+
+
 @app.route("/honeydews.json")
 def index():
     return db.honeydews_all()
