@@ -35,3 +35,8 @@ def update(id):
     description = request.form.get("description")
     priority = request.form.get("priority")
     return db.honeydews_update_by_id(id, name, description, priority)
+
+
+@app.route("/honeydews/<id>.json", methods=["DELETE"])
+def destroy(id):
+    return db.honeydews_destroy_by_id(id)
