@@ -59,6 +59,18 @@ def honeydews_create(name, description, priority):
     return dict(row)
 
 
+def honeydews_find_by_id(id):
+    conn = connect_to_db()
+    row = conn.execute(
+        """
+        SELECT * FROM honeydews
+        WHERE id = ?
+        """,
+        (id,),
+    ).fetchone()
+    return dict(row)
+
+
 def honeydews_all():
     conn = connect_to_db()
     rows = conn.execute(
