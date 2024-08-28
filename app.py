@@ -12,17 +12,13 @@ def hello():
 
 
 @app.route("/honeydews/<id>.json")
-def show(id):
+def showhoneydews(id):
     return db.honeydews_find_by_id(id)
-
-
 @app.route("/honeydews.json")
-def index():
+def indexhoneydews():
     return db.honeydews_all()
-
-
 @app.route("/honeydews.json", methods=["POST"])
-def create():
+def createhoneydews():
     name = request.form.get("name")
     completed = request.form.get("completed")
     deadline = request.form.get("deadline")
@@ -31,10 +27,8 @@ def create():
     category_id = request.form.get("category_id")
     user_id = request.form.get("user_id")
     return db.honeydews_create(name, completed, deadline, description, priority, category_id, user_id)
-
-
 @app.route("/honeydews/<id>.json", methods=["PATCH"])
-def update(id):
+def updatehoneydews(id):
     name = request.form.get("name")
     completed = request.form.get("completed")
     deadline = request.form.get("deadline")
@@ -42,9 +36,26 @@ def update(id):
     priority = request.form.get("priority")
     category_id = request.form.get("category_id")
     user_id = request.form.get("user_id")
-    return db.honeydews_update_by_id(id, name, description, priority, category_id, user_id)
-
-
+    return db.honeydews_update_by_id(id, name, completed, deadline, description, priority, category_id, user_id)
 @app.route("/honeydews/<id>.json", methods=["DELETE"])
-def destroy(id):
+def destroyhoneydews(id):
     return db.honeydews_destroy_by_id(id)
+
+
+@app.route("/categories/<id>.json")
+def showcategories(id):
+    return db.categories_find_by_id(id)
+@app.route("/categories.json")
+def indexcategories():
+    return db.categories_all()
+@app.route("/categories.json", methods=["POST"])
+def createcategories():
+    name = request.form.get("name",)
+    return db.categories_create(name)
+@app.route("/categories/<id>.json", methods=["PATCH"])
+def updatecategories(id):
+    name = request.form.get("name")
+    return db.categories_update_by_id(id, name)
+@app.route("/categories/<id>.json", methods=["DELETE"])
+def destroycategories(id):
+    return db.categories_destroy_by_id(id)
