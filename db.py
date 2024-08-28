@@ -21,6 +21,11 @@ def initial_setup():
     )
     conn.execute(
         """
+        DROP TABLE IF EXISTS categories;
+        """
+    )
+    conn.execute(
+        """
         CREATE TABLE honeydews (
           id INTEGER PRIMARY KEY NOT NULL,
           name TEXT,
@@ -28,6 +33,7 @@ def initial_setup():
           deadline TEXT,
           description TEXT,
           priority INTEGER,
+          category_id INTEGER,
           user_id INTEGER
         );
         """
@@ -42,19 +48,32 @@ def initial_setup():
         );
         """
     )
+    conn.execute(
+        """
+        CREATE TABLE categories (
+          id INTEGER PRIMARY KEY NOT NULL,
+          name TEXT
+        );
+        """
+    )
     conn.commit()
     print("Table created successfully")
 
     honeydews_seed_data = [
-        ("1st honeydew", 0, "01-01-2025", "First description", 1, 1),
-        ("2nd honeydew", 0, "01-01-2025", "Second description", 2, 1),
-        ("3rd honeydew", 0, "01-01-2025", "Third description", 3, 1),
+        ("1st honeydew", 0, "01-01-2025", "First description", 1, 3, 1),
+        ("2nd honeydew", 0, "01-01-2025", "Second description", 2, 2, 1),
+        ("3rd honeydew", 0, "01-01-2025", "Third description", 3, 1, 1),
     ]
     users_seed_data = [("test", "test@example.com", "password")]
+    categories_seed_data = [
+        ("category 1",),
+        ("category 2",),
+        ("category 3",),
+    ]
     conn.executemany(
         """
-        INSERT INTO honeydews (name, completed, deadline, description, priority, user_id)
-        VALUES (?,?,?,?,?,?)
+        INSERT INTO honeydews (name, completed, deadline, description, priority, category_id, user_id)
+        VALUES (?,?,?,?,?,?,?)
         """,
         honeydews_seed_data,
     )
@@ -65,35 +84,42 @@ def initial_setup():
         """,
         users_seed_data,
     )
+    conn.executemany(
+        """
+        INSERT INTO categories (name)
+        VALUES (?)
+        """,
+        categories_seed_data,
+    )
     conn.commit()
     print("Seed data created successfully")
 
     conn.close()
 
 
-def honeydews_create(name, completed, deadline, description, priority, user_id):
+def honeydews_create(name, completed, deadline, description, priority, category_id, user_id):
     conn = connect_to_db()
     row = conn.execute(
         """
-        INSERT INTO honeydews (name, completed, deadline, description, priority, user_id)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO honeydews (name, completed, deadline, description, priority, category_id, user_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         RETURNING *
         """,
-        (name, completed, deadline, description, priority, user_id),
+        (name, completed, deadline, description, priority, category_id, user_id),
     ).fetchone()
     conn.commit()
     return dict(row)
 
 
-def honeydews_update_by_id(id, name, completed, deadline, description, priority, user_id):
+def honeydews_update_by_id(id, name, completed, deadline, description, priority, category_id, user_id):
     conn = connect_to_db()
     row = conn.execute(
         """
-        UPDATE honeydews SET name = ?, completed = ?, deadline = ?, description = ?, priority = ?, user_id = ?
+        UPDATE honeydews SET name = ?, completed = ?, deadline = ?, description = ?, priority = ?, category_id = ?, user_id = ?
         WHERE id = ?
         RETURNING *
         """,
-        (name, completed, deadline, description, priority, user_id, id),
+        (name, completed, deadline, description, priority, category_id, user_id, id),
     ).fetchone()
     conn.commit()
     return dict(row)

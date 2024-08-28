@@ -28,8 +28,9 @@ def create():
     deadline = request.form.get("deadline")
     description = request.form.get("description")
     priority = request.form.get("priority")
+    category_id = request.form.get("category_id")
     user_id = request.form.get("user_id")
-    return db.honeydews_create(name, completed, deadline, description, priority, user_id)
+    return db.honeydews_create(name, completed, deadline, description, priority, category_id, user_id)
 
 
 @app.route("/honeydews/<id>.json", methods=["PATCH"])
@@ -39,8 +40,9 @@ def update(id):
     deadline = request.form.get("deadline")
     description = request.form.get("description")
     priority = request.form.get("priority")
+    category_id = request.form.get("category_id")
     user_id = request.form.get("user_id")
-    return db.honeydews_update_by_id(id, name, description, priority, user_id)
+    return db.honeydews_update_by_id(id, name, description, priority, category_id, user_id)
 
 
 @app.route("/honeydews/<id>.json", methods=["DELETE"])
