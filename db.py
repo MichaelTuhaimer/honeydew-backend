@@ -24,6 +24,8 @@ def initial_setup():
         CREATE TABLE honeydews (
           id INTEGER PRIMARY KEY NOT NULL,
           name TEXT,
+          completed INTEGER,
+          deadline TEXT,
           description TEXT,
           priority INTEGER,
           user_id INTEGER
@@ -44,17 +46,17 @@ def initial_setup():
     print("Table created successfully")
 
     honeydews_seed_data = [
-        ("1st honeydew", "First description", 1, 1),
-        ("2nd honeydew", "Second description", 2, 1),
-        ("3rd honeydew", "Third description", 3, 1),
+        ("1st honeydew", 0, "01-01-2025", "First description", 1, 1),
+        ("2nd honeydew", 0, "01-01-2025", "Second description", 2, 1),
+        ("3rd honeydew", 0, "01-01-2025", "Third description", 3, 1),
     ]
     users_seed_data = [
         ("test", "test@example.com", "password")
     ]
     conn.executemany(
         """
-        INSERT INTO honeydews (name, description, priority, user_id)
-        VALUES (?,?,?,?)
+        INSERT INTO honeydews (name, completed, deadline, description, priority, user_id)
+        VALUES (?,?,?,?,?,?)
         """,
         honeydews_seed_data,
     )
@@ -71,29 +73,29 @@ def initial_setup():
     conn.close()
 
 
-def honeydews_create(name, description, priority, user_id):
+def honeydews_create(name, completed, deadline, description, priority, user_id):
     conn = connect_to_db()
     row = conn.execute(
         """
-        INSERT INTO honeydews (name, description, priority, user_id)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO honeydews (name, completed, deadline, description, priority, user_id)
+        VALUES (?, ?, ?, ?, ?, ?)
         RETURNING *
         """,
-        (name, description, priority, user_id),
+        (name, completed, deadline, description, priority, user_id),
     ).fetchone()
     conn.commit()
     return dict(row)
 
 
-def honeydews_update_by_id(id, name, description, priority):
+def honeydews_update_by_id(id, name, completed, deadline, description, priority, user_id):
     conn = connect_to_db()
     row = conn.execute(
         """
-        UPDATE honeydews SET name = ?, description = ?, priority = ?
+        UPDATE honeydews SET name = ?, completed = ?, deadline = ?, description = ?, priority = ?, user_id = ?
         WHERE id = ?
         RETURNING *
         """,
-        (name, description, priority, id),
+        (name, completed, deadline, description, priority, user_id, id),
     ).fetchone()
     conn.commit()
     return dict(row)
