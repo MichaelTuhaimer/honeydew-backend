@@ -50,9 +50,7 @@ def initial_setup():
         ("2nd honeydew", 0, "01-01-2025", "Second description", 2, 1),
         ("3rd honeydew", 0, "01-01-2025", "Third description", 3, 1),
     ]
-    users_seed_data = [
-        ("test", "test@example.com", "password")
-    ]
+    users_seed_data = [("test", "test@example.com", "password")]
     conn.executemany(
         """
         INSERT INTO honeydews (name, completed, deadline, description, priority, user_id)
@@ -103,7 +101,7 @@ def honeydews_update_by_id(id, name, completed, deadline, description, priority,
 
 def honeydews_destroy_by_id(id):
     conn = connect_to_db()
-    row = conn. execute(
+    row = conn.execute(
         """
         DELETE from honeydews
         WHERE id = ?
