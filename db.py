@@ -1,10 +1,15 @@
 import sqlite3
+import bcrypt
 
 
 def connect_to_db():
     conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
     return conn
+
+
+def hash_password(password):
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 
 def initial_setup():
@@ -58,14 +63,16 @@ def initial_setup():
         """
     )
     conn.commit()
-    print("Table created successfully")
+    print("Tables created successfully")
 
     honeydews_seed_data = [
         ("1st honeydew", 0, "01-01-2025", "First description", 1, 3, 1),
         ("2nd honeydew", 0, "01-01-2025", "Second description", 2, 2, 1),
         ("3rd honeydew", 0, "01-01-2025", "Third description", 3, 1, 1),
     ]
-    users_seed_data = [("test", "test13", "test@example.com", "password")]
+    users_seed_data = [
+        ("test", "test13", "test@example.com", hash_password("password"))
+    ]
     categories_seed_data = [
         ("category 1",),
         ("category 2",),
