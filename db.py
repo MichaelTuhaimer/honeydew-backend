@@ -221,5 +221,17 @@ def categories_all():
     return [dict(row) for row in rows]
 
 
+def honeydews_by_category(id):
+    conn = connect_to_db()
+    rows = conn.execute(
+        """
+        SELECT * FROM honeydews
+        WHERE category_id = ?
+        """,
+        (id),
+    )
+    return [dict(row) for row in rows]
+
+
 if __name__ == "__main__":
     initial_setup()
