@@ -135,8 +135,6 @@ def honeydews_update_by_id(
     ).fetchone()
     conn.commit()
     return dict(row)
-
-
 def honeydews_destroy_by_id(id):
     conn = connect_to_db()
     row = conn.execute(
@@ -148,8 +146,6 @@ def honeydews_destroy_by_id(id):
     )
     conn.commit()
     return {"message": "Honeydew destroyed successfully"}
-
-
 def honeydews_find_by_id(id):
     conn = connect_to_db()
     row = conn.execute(
@@ -160,13 +156,66 @@ def honeydews_find_by_id(id):
         (id,),
     ).fetchone()
     return dict(row)
-
-
 def honeydews_all():
     conn = connect_to_db()
     rows = conn.execute(
         """
         SELECT * FROM honeydews
+        """
+    ).fetchall()
+    return [dict(row) for row in rows]
+
+
+def categories_create(name):
+    conn = connect_to_db()
+    row = conn.execute(
+        """
+        INSERT INTO categories (name)
+        VALUES (?)
+        RETURNING *
+        """,
+        (name,),
+    ).fetchone()
+    conn.commit()
+    return dict(row)
+def categories_update_by_id(id, name):
+    conn = connect_to_db()
+    row = conn.execute(
+        """
+        UPDATE categories SET name = ?
+        WHERE id = ?
+        RETURNING *
+        """,
+        (name, id),
+    ).fetchone()
+    conn.commit()
+    return dict(row)
+def categories_destroy_by_id(id):
+    conn = connect_to_db()
+    row = conn.execute(
+        """
+        DELETE from categories
+        WHERE id = ?
+        """,
+        (id),
+    )
+    conn.commit()
+    return {"message": "Category destroyed successfully"}
+def categories_find_by_id(id):
+    conn = connect_to_db()
+    row = conn.execute(
+        """
+        SELECT * FROM categories
+        WHERE id = ?
+        """,
+        (id),
+    ).fetchone()
+    return dict(row)
+def categories_all():
+    conn = connect_to_db()
+    rows = conn.execute(
+        """
+        SELECT * FROM categories
         """
     ).fetchall()
     return [dict(row) for row in rows]
