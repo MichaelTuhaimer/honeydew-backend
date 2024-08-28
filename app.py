@@ -24,15 +24,19 @@ def index():
 @app.route("/honeydews.json", methods=["POST"])
 def create():
     name = request.form.get("name")
+    completed = request.form.get("completed")
+    deadline = request.form.get("deadline")
     description = request.form.get("description")
     priority = request.form.get("priority")
     user_id = request.form.get("user_id")
-    return db.honeydews_create(name, description, priority, user_id)
+    return db.honeydews_create(name, completed, deadline, description, priority, user_id)
 
 
 @app.route("/honeydews/<id>.json", methods=["PATCH"])
 def update(id):
     name = request.form.get("name")
+    completed = request.form.get("completed")
+    deadline = request.form.get("deadline")
     description = request.form.get("description")
     priority = request.form.get("priority")
     user_id = request.form.get("user_id")
