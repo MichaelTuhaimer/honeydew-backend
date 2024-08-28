@@ -59,3 +59,8 @@ def updatecategories(id):
 @app.route("/categories/<id>.json", methods=["DELETE"])
 def destroycategories(id):
     return db.categories_destroy_by_id(id)
+
+
+@app.route("/honeydews/category/<id>.json")
+def honeydewscategory(id):
+    return db.honeydews_by_category(id)
